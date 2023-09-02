@@ -1,0 +1,93 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    background-color: #f3f3f3;
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+#contenedor__inicio {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+
+    .lado__izquierdo {
+        flex: 2;
+        max-height: 100%;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-position: center;
+            object-fit: cover;
+        }
+    }
+
+    .lado__derecho {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 3rem;
+        padding: 1rem;
+
+        .logo {
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+        }
+
+        .caja_boton_login {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+
+            .btn_login {
+                font-size: 20px;
+                color: orange;
+                transition: all 0.2s linear;
+
+                &:hover {
+                    letter-spacing: 2px;
+                }
+            }
+
+            .icono {
+                width: 100px;
+                height: 100px;
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    object-position: center;
+                }
+            }
+        }
+
+        .creditos {
+            text-align: center;
+            span {
+                font-size: 12px;
+                color: gray;
+            }
+        }
+    }
+}
