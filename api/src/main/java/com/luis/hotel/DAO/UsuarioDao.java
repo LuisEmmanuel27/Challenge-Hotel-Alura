@@ -16,23 +16,14 @@ public class UsuarioDao {
         this.connectionFactory = connectionFactory;
     }
 
-    /**
-     * Busca un usuario en la base de datos por nombre de usuario y contraseña.
-     *
-     * @param nombreUsuario     El nombre de usuario a buscar.
-     * @param contrasenaUsuario La contraseña del usuario.
-     * @return El objeto Usuario si se encuentra y la contraseña coincide, o null si
-     *         no se encuentra.
-     * @throws SQLException Si ocurre un error durante la búsqueda o la
-     *                      autenticación.
-     */
     public Usuario buscarUsuario(String nombreUsuario, String contrasenaUsuario) throws SQLException {
         Connection connection = connectionFactory.recuperaConexion();
-        String sqlStatement = "SELECT id, name, password FROM usuario WHERE name = ?";
+        String sqlStatement = "SELECT id, name, password FROM usuario WHERE name = ? AND password = ? AND is_active = 1";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement);
             preparedStatement.setString(1, nombreUsuario);
+            preparedStatement.setString(2, contrasenaUsuario);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
