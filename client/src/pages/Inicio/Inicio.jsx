@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import muestraHotel from '../../assets/hotel-registration.jpg';
 import logo from '../../assets/logo.png';
 import iconoUsuario from '../../assets/useri-icon.png';
@@ -20,7 +21,7 @@ const Inicio = () => {
                 <div className="caja_boton_login">
 
                     {/* Modificar este enlace */}
-                    <a href="#" className="btn_login">Login</a>
+                    <Link to="/login" className="btn_login">Login</Link>
 
                     <div className="icono">
                         <img
