@@ -19,6 +19,7 @@ const MenuPrincipal = () => {
                             Sistema de reserva del hotel. Controle y administre de forma óptima y fácil el flujo
                             de reservas y de huespédes del hotel.
                             <br />
+                            <br />
                             Esta herramienta le permitirá llevar un control completo y detallado de sus
                             reservas y huespédes, tendrá acceso a herramientas especiales para tareas específicas
                             como lo son:

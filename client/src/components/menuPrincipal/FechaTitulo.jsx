@@ -5,7 +5,7 @@ const FechaTitulo = () => {
     const fechaFormateada = fechaActual.toLocaleDateString(undefined, options);
 
     return (
-        <div>
+        <div className="fecha__titulo">
             <h1>Sistema de Reservas Hotel Alura</h1>
 
             <h2>Hoy es {fechaFormateada}</h2>
