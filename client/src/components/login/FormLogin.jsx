@@ -1,13 +1,28 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
+import { loginUser } from "../../helper/api";
 
 const FormLogin = () => {
 
     const { login, isAuthenticated } = useAuth();
+    const [formData, setFormData] = useState({ nombreUsuario: '', contrasenaUsuario: '' });
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        login();
+
+        const nombreUsuario = e.target[0].value;
+        const contrasenaUsuario = e.target[1].value;
+        setFormData({ nombreUsuario: nombreUsuario, contrasenaUsuario: contrasenaUsuario });
+
+        try {
+            const user = await loginUser(formData);
+            login(user);
+            navigate('/menuPrincipal');
+        } catch (error) {
+            console.log('Error de inicio de sesion: ', error);
+        }
     }
 
     if (isAuthenticated) {
@@ -21,9 +36,9 @@ const FormLogin = () => {
                 <input
                     type="text"
                     id="usuario"
-                    name="usuario"
                     className="usuario"
                     placeholder="Ingresa tu nombre de usuario"
+                    autocomplete="off"
                 />
             </div>
 
@@ -31,9 +46,9 @@ const FormLogin = () => {
                 <label htmlFor="password">contraseña</label>
                 <input
                     type="password"
-                    name="password"
                     id="password"
                     placeholder="Ingresa tu contraseña"
+                    autocomplete="new-password"
                 />
             </div>
 
