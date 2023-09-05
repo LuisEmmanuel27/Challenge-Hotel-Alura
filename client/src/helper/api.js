@@ -2,7 +2,6 @@ import axios from 'axios';
 
 export const loginUser = async (userData) => {
     try {
-        console.log("userData en la api: ", userData);
         const json = JSON.stringify(userData);
         const response = await axios.post("http://localhost:8080/login", json);
 

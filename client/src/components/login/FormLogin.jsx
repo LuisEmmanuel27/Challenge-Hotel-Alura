@@ -1,60 +1,116 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loginUser } from "../../helper/api";
+import Error from "../Error";
 
 const FormLogin = () => {
 
-    const { login, isAuthenticated } = useAuth();
-    const [formData, setFormData] = useState({ nombreUsuario: '', contrasenaUsuario: '' });
+    const { login } = useAuth();
+    const [error, setError] = useState(false);
+    const [nombreUsuario, setNombreUsuario] = useState(null);
+    const [contrasenaUsuario, setContrasenaUsuario] = useState(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setTimeout(() => {
+            const inputs = document.querySelectorAll("input");
+            inputs.forEach(input => input.value = null);
+        }, 1000);
+    }, []);
+
+    const handleChange = (e) => {
+        const value = e.target.id;
+        console.log(value);
+        value === "nombreUsuario" ?
+            setNombreUsuario(e.target.value) :
+            setContrasenaUsuario(e.target.value);
+    }
+
+    const verificarDatos = (nombre, contrasena, flag) => {
+
+        let statusNom = true;
+        let statusContra = true;
+
+        if (nombre === null || nombre === "") {
+            document.getElementById("nombreUsuario").classList.add("error");
+            statusNom = false;
+        }
+
+        if (contrasena === null || contrasena === "") {
+            document.getElementById("contrasenaUsuario").classList.add("error");
+            statusContra = false;
+        }
+
+        if (!statusNom || !statusContra) return flag = false;
+        else {
+            document.getElementById("nombreUsuario").classList.remove("error");
+            document.getElementById("contrasenaUsuario").classList.remove("error");
+            return flag = true;
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const nombreUsuario = e.target[0].value;
-        const contrasenaUsuario = e.target[1].value;
-        setFormData({ nombreUsuario: nombreUsuario, contrasenaUsuario: contrasenaUsuario });
+        let flag = true;
 
-        try {
-            const user = await loginUser(formData);
-            login(user);
-            navigate('/menuPrincipal');
-        } catch (error) {
-            console.log('Error de inicio de sesion: ', error);
+        flag = verificarDatos(nombreUsuario, contrasenaUsuario, flag);
+        console.log(flag);
+
+        if (flag === true) {
+            // Almacena los valores en variables locales
+            const newFormData = {
+                nombreUsuario: nombreUsuario,
+                contrasenaUsuario: contrasenaUsuario,
+            };
+
+            try {
+                const user = await loginUser(newFormData);
+                login(user);
+                navigate('/menuPrincipal');
+            } catch (err) {
+                setError(true);
+                console.log('Error de inicio de sesion: ', err);
+            }
+        } else {
+            console.log("hay datos nulos");
+            return;
         }
     }
 
-    if (isAuthenticated) {
-        return <Navigate to="/menuPrincipal" />;
-    }
-
     return (
+
         <form className="contenedor__input" onSubmit={handleSubmit}>
             <div className="caja_input">
-                <label htmlFor="usuario">usuario</label>
+                <label htmlFor="nombreUsuario">usuario</label>
                 <input
                     type="text"
-                    id="usuario"
+                    id="nombreUsuario"
                     className="usuario"
                     placeholder="Ingresa tu nombre de usuario"
-                    autocomplete="off"
+                    autoComplete="off"
+                    onChange={handleChange}
                 />
             </div>
 
             <div className="caja_input">
-                <label htmlFor="password">contraseña</label>
+                <label htmlFor="contrasenaUsuario">contraseña</label>
                 <input
                     type="password"
-                    id="password"
+                    id="contrasenaUsuario"
+                    className="contraseña"
                     placeholder="Ingresa tu contraseña"
-                    autocomplete="new-password"
+                    autoComplete="new-password"
+                    onChange={handleChange}
                 />
             </div>
 
             <button type="submit" className="btn__principal" id="btn_login">
                 entrar
             </button>
+
+            {error && <Error />}
         </form>
     )
 }
