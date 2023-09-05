@@ -27,6 +27,15 @@ body {
     }
 }
 
+#error__componente {
+    background-color: rgb(206, 10, 10);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 12px;
+}
+
 #contenedor__inicio {
     display: flex;
     width: 100%;

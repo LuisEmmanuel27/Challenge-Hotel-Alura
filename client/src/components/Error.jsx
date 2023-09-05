@@ -2,8 +2,8 @@ import React from 'react'
 
 const Error = () => {
     return (
-        <div>
-            Al parecer algo salio mal, verifica que tu nombre de usuario y/o contraseña esten correctos
+        <div id='error__componente'>
+            Al parecer algo salió mal, verifica que tu nombre de usuario y/o contraseña estén correctos.
         </div>
     )
 }
