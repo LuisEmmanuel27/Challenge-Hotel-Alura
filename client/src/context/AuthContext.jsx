@@ -11,13 +11,17 @@ export function AuthProvider({ children }) {
         setUser(userData);
     }
 
+    const loginSinUser = () => {
+        setisAuthenticated(true);
+    }
+
     const logout = () => {
         setisAuthenticated(false);
         setUser(null);
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, login, loginSinUser, logout }}>
             {children}
         </AuthContext.Provider>
     );

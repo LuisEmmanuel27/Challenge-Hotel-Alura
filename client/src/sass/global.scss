@@ -180,6 +180,23 @@ body {
                         color: gray;
                     }
                 }
+
+                p {
+                    display: none;
+                }
+
+                &.error {
+                    input {
+                        border-bottom: solid 3px rgb(189, 12, 12);
+                    }
+
+                    p {
+                        display: block;
+                        font-weight: bold;
+                        font-size: 12px;
+                        color: red;
+                    }
+                }
             }
 
             button {
