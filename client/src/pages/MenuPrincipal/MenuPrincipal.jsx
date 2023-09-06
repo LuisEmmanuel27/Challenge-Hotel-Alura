@@ -2,6 +2,7 @@ import FechaTitulo from "../../components/menuPrincipal/FechaTitulo"
 import Sidebar from "../../components/menuPrincipal/Sidebar"
 
 const MenuPrincipal = () => {
+
     return (
         <div id="contenedor__menuPrincipal">
             <div className="lado__izquierdo">

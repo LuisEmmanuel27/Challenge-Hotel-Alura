@@ -82,6 +82,10 @@ const FormLogin = () => {
         e.preventDefault();
 
         loginSinUser();
+
+        // Almacenar el token de autenticación en el almacenamiento local
+        localStorage.setItem("authToken", "tuTokenAqui");
+
         navigate('/menuPrincipal');
     }
 
