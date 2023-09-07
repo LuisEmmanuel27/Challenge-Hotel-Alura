@@ -5,7 +5,7 @@ const RegistroReservas = () => {
     return (
         <div id="contenedor__registroReservas">
             <div className='lado__izquierdo'>
-                <h1>sistema de reservas</h1>
+                <h1 className="titular">sistema de reservas</h1>
 
                 <FormReserva />
             </div>

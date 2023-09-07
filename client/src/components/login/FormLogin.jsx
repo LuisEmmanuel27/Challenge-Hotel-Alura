@@ -1,12 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
-import { loginUser } from "../../helper/api";
 import Error from "../Error";
+import { useAuth } from "../../context/AuthContext";
 
 const FormLogin = () => {
 
-    const { login, loginSinUser } = useAuth();
+    const { login } = useAuth();
     const [error, setError] = useState(false);
     const [nombreUsuario, setNombreUsuario] = useState(null);
     const [contrasenaUsuario, setContrasenaUsuario] = useState(null);
@@ -65,6 +64,7 @@ const FormLogin = () => {
 
     //         try {
     //             const user = await loginUser(newFormData);
+    //             localStorage.setItem("authToken", "tuTokenAqui");
     //             login(user);
     //             navigate('/menuPrincipal');
     //         } catch (err) {
@@ -80,8 +80,6 @@ const FormLogin = () => {
     // ! Funcion para no estar levantando la base de datos
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        loginSinUser();
 
         // Almacenar el token de autenticación en el almacenamiento local
         localStorage.setItem("authToken", "tuTokenAqui");

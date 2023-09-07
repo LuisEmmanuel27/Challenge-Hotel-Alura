@@ -1,15 +1,81 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom"
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // Importa los estilos CSS por defecto
+import SelectFormaPago from './SelectFormaPago';
+import { useReserva } from '../../context/ReservaContext';
 
 // TODO Las reservas tendran un valor de $800 la noche
 const FormReserva = () => {
 
     const [selectedDateIn, setSelectedDateIn] = useState(null); // Inicializa el estado para la fecha seleccionada
     const [selectedDateOut, setSelectedDateOut] = useState(null); // Inicializa el estado para la fecha seleccionada
+    const [selectedFormaPago, setSelectedFormaPago] = useState(null);
+    const [totalCost, setTotalCost] = useState(0);
+    const [error, setError] = useState(false);
+    const navigate = useNavigate();
 
+    // valores del context de reserva
+    const { datosReserva, setDatosReserva, datosHuesped, setDatosHuesped } = useReserva();
+
+    //* Generar el costo total de la reserva
+    useEffect(() => {
+        if (selectedDateIn && selectedDateOut) {
+            const unDia = 24 * 60 * 60 * 1000;
+            const noches = Math.round(Math.abs(selectedDateOut - selectedDateIn) / unDia);
+
+            const costePorNoche = 800;
+            const total = noches * costePorNoche;
+            // Formatea el número con comas
+            const formattedTotal = total.toLocaleString();
+
+            setTotalCost(formattedTotal);
+        } else {
+            setTotalCost(0);
+        }
+    }, [selectedDateIn, selectedDateOut]);
+
+    //* Generar un numero de reserva
+    const generarNumeroReserva = () => {
+        const fechaActual = new Date();
+        const costo = totalCost.replace('$', '');
+        const metodoPago = selectedFormaPago.value;
+
+        const valorAleatorio = Math.floor(Math.random() * 100) + 1;
+
+        const numeroReserva = `${fechaActual.getFullYear()}${fechaActual.getMonth() + 1}${fechaActual.getDate()}${costo}${metodoPago}${valorAleatorio}`;
+
+        return numeroReserva;
+    }
+
+    //* Enviando los datos del formulario
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (selectedDateIn && selectedDateOut && selectedFormaPago) {
+            const fechaEntrada = selectedDateIn;
+            const fechaSalida = selectedDateOut;
+            const valor = totalCost;
+            const formaDePago = selectedFormaPago.value;
+            const idReserva = generarNumeroReserva();
+
+            setDatosReserva({
+                ...datosReserva,
+                fechaEntrada,
+                fechaSalida,
+                valor,
+                formaDePago,
+            });
+
+            setDatosHuesped({
+                ...datosHuesped,
+                idReserva
+            })
+
+            navigate('/registroHuesped');
+        } else {
+            setError(true);
+        }
     }
 
     return (
@@ -32,7 +98,7 @@ const FormReserva = () => {
                     id='fecha_out'
                     selected={selectedDateOut}
                     onChange={(date) => setSelectedDateOut(date)}
-                    minDate={selectedDateIn} // Esto bloquea las fechas pasadas
+                    minDate={selectedDateIn ? new Date(selectedDateIn.getTime() + 86400000) : null} // Esto bloquea las fechas pasadas
                     dateFormat="dd/MM/yyyy" // Formato de visualización
                     isClearable // Agrega un botón para borrar la fecha seleccionada
                 />
@@ -40,19 +106,27 @@ const FormReserva = () => {
 
             <div className='caja_input'>
                 <label htmlFor="valor_reserva">valor de reserva</label>
-                <input type="number" id='valor_reserva' className='valor_reserva' disabled contentEditable="false" placeholder='$' />
+                <input
+                    type="text"
+                    id='valor_reserva'
+                    className='valor_reserva'
+                    disabled
+                    contentEditable="false"
+                    placeholder='$'
+                    value={`$ ${totalCost}`}
+                />
             </div>
 
-            <div className='caja_input'>
-                <label htmlFor='forma_pago'>forma de pago</label>
-                <select id='forma_pago'>
-                    <option value="targeta de debito" key="1">targeta de debito</option>
-                    <option value="targeta de credito" key="2">targeta de credito</option>
-                    <option value="efectivo" key="3">efectivo</option>
-                </select>
-            </div>
+            <SelectFormaPago selectedFormaPago={selectedFormaPago} setSelectedFormaPago={setSelectedFormaPago} />
 
-            <button type="submit">
+            {
+                error &&
+                <p className='error'>
+                    Hay datos faltantes, por favor llena el formulario correctamente.
+                </p>
+            }
+
+            <button type="submit" className="btn__principal" id="btn_guardar_reservacion">
                 siguiente
             </button>
         </form>

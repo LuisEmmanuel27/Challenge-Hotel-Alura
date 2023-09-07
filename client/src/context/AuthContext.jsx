@@ -11,10 +11,6 @@ export function AuthProvider({ children }) {
         setUser(userData);
     }
 
-    const loginSinUser = () => {
-        setisAuthenticated(true);
-    }
-
     const logout = () => {
         localStorage.clear();
         setisAuthenticated(false);
@@ -22,7 +18,7 @@ export function AuthProvider({ children }) {
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, login, loginSinUser, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
