@@ -72,8 +72,6 @@ const FormReserva = () => {
                 idReserva
             })
 
-            console.log(datosReserva);
-
             navigate('/registroHuesped');
         } else {
             setError(true);

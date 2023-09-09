@@ -27,7 +27,7 @@ const FormHuesped = () => {
 
     } = useFormValidation();
 
-    const { datosHuesped, setDatosHuesped } = useReserva();
+    const { datosReserva, datosHuesped, setDatosHuesped } = useReserva();
 
     // TODO Falta el envio de datos con ayuda del context
     const handleSubmit = (e) => {
@@ -53,6 +53,7 @@ const FormHuesped = () => {
     }
 
     useEffect(() => {
+        console.log(datosReserva);
         console.log(datosHuesped);
     }, [datosHuesped]);
 
