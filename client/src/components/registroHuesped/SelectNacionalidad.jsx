@@ -24,10 +24,10 @@ const options = [
     // Agregar más opciones de nacionalidades según sea necesario
 ];
 
-const SelectNacionalidad = ({ selectedNacionalidad, setSelectedNacionalidad }) => {
+const SelectNacionalidad = ({ nacionalidad, setNacionalidad, errorNacionalidad }) => {
 
     const handleChange = (selectedOption) => {
-        setSelectedNacionalidad(selectedOption);
+        setNacionalidad(selectedOption);
     };
 
     return (
@@ -35,11 +35,12 @@ const SelectNacionalidad = ({ selectedNacionalidad, setSelectedNacionalidad }) =
             <label htmlFor='nacionalidad'>Nacionalidad</label>
             <Select
                 id='nacionalidad'
-                value={selectedNacionalidad}
+                value={nacionalidad}
                 onChange={handleChange}
                 options={options}
                 placeholder="Selecciona una nacionalidad"
             />
+            {errorNacionalidad && <p className="error">{errorNacionalidad}</p>}
         </div>
     )
 }

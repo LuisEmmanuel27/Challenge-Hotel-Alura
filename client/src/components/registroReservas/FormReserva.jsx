@@ -15,7 +15,7 @@ const FormReserva = () => {
     const [error, setError] = useState(false);
     const navigate = useNavigate();
 
-    // valores del context de reserva
+    //* valores del context de reserva
     const { datosReserva, setDatosReserva, datosHuesped, setDatosHuesped } = useReserva();
 
     //* Generar el costo total de la reserva
@@ -56,7 +56,7 @@ const FormReserva = () => {
             const fechaEntrada = selectedDateIn;
             const fechaSalida = selectedDateOut;
             const valor = totalCost;
-            const formaDePago = selectedFormaPago.value;
+            const formaDePago = selectedFormaPago;
             const idReserva = generarNumeroReserva();
 
             setDatosReserva({
@@ -71,6 +71,8 @@ const FormReserva = () => {
                 ...datosHuesped,
                 idReserva
             })
+
+            console.log(datosReserva);
 
             navigate('/registroHuesped');
         } else {

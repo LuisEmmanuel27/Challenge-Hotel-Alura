@@ -1,61 +1,109 @@
-import { useState } from "react";
 import ReactDatePicker from "react-datepicker"
 import SelectNacionalidad from "./SelectNacionalidad";
 import { useReserva } from "../../context/ReservaContext";
+import { useFormValidation } from "../../hook/useFormValidation";
+import { useEffect } from "react";
 
 const FormHuesped = () => {
 
-    const { datosHuesped, setDatosHuesped } = useReserva();
-    const [selectedBornDate, setSelectedBornDate] = useState(null);
-    const [selectedNacionalidad, setSelectedNacionalidad] = useState(null);
-    const [datosFormHuesped, setDatosFormHuesped] = useState({
-        nombre: null,
-        apellido: null,
-        fechaNacimiento: null,
-        nacionalidad: null,
-        telefono: null,
-        idReserva: null,
-    })
+    const {
 
-    const handleBlur = (e) => {
-        if (!e.target.value) {
-            alert("Por favor, complete todos los campos antes de enviar el formulario.");
+        nombre,
+        setNombre,
+        apellido,
+        setApellido,
+        fechaNacimiento,
+        setFechaNacimiento,
+        nacionalidad,
+        setNacionalidad,
+        telefono,
+        setTelefono,
+        errorNombre,
+        errorApellido,
+        errorFechaNacimiento,
+        errorNacionalidad,
+        errorTelefono,
+        validarFormulario
+
+    } = useFormValidation();
+
+    const { datosHuesped, setDatosHuesped } = useReserva();
+
+    // TODO Falta el envio de datos con ayuda del context
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const formularioValido = validarFormulario();
+
+        if (!formularioValido) {
+
+            alert("error");
+
+        } else {
+
+            setDatosHuesped((prevDatosHuesped) => ({
+                ...prevDatosHuesped,
+                nombre,
+                apellido,
+                fechaNacimiento,
+                nacionalidad,
+                telefono,
+            }));
         }
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    }
+    useEffect(() => {
+        console.log(datosHuesped);
+    }, [datosHuesped]);
 
     return (
         <form className="contenedor__input" onSubmit={handleSubmit}>
             <div className="caja_input">
                 <label htmlFor="nombre_huesped">nombre</label>
-                <input type="text" id="nombre_huesped" placeholder="Ingrese el nombre del huesped" />
+                <input
+                    type="text"
+                    id="nombre_huesped"
+                    placeholder="Ingrese el nombre del huesped"
+                    onChange={e => setNombre(e.target.value)}
+                />
+                {errorNombre && <p className="error">{errorNombre}</p>}
             </div>
 
             <div className="caja_input">
                 <label htmlFor="apellido_huesped">apellido</label>
-                <input type="text" id="apellido_huesped" placeholder="Ingrese el apellido del huesped" />
+                <input
+                    type="text"
+                    id="apellido_huesped"
+                    placeholder="Ingrese el apellido del huesped"
+                    onChange={e => setApellido(e.target.value)}
+                />
+                {errorApellido && <p className="error">{errorApellido}</p>}
             </div>
 
             <div className="caja_input">
                 <label htmlFor="fecha_born">fecha de nacimiento</label>
                 <ReactDatePicker
                     id='fecha_born'
-                    selected={selectedBornDate}
-                    onChange={(date) => setSelectedBornDate(date)}
+                    selected={fechaNacimiento}
+                    onChange={(date) => setFechaNacimiento(date)}
                     maxDate={new Date()} // Esto bloquea las fechas pasadas
                     dateFormat="dd/MM/yyyy" // Formato de visualización
                     isClearable // Agrega un botón para borrar la fecha seleccionada
                 />
+                {errorFechaNacimiento && <p className="error">{errorFechaNacimiento}</p>}
             </div>
 
-            <SelectNacionalidad selectedNacionalidad={selectedNacionalidad} setSelectedNacionalidad={setSelectedNacionalidad} />
+            <SelectNacionalidad nacionalidad={nacionalidad} setNacionalidad={setNacionalidad} errorNacionalidad={errorNacionalidad} />
 
             <div className="caja_input">
                 <label className="telefono_huesped">telefono</label>
-                <input type="number" id="telefono_huesped" placeholder="ingrese el telefono del huesped" />
+                <input
+                    type="number"
+                    id="telefono_huesped"
+                    placeholder="ingrese el telefono del huesped"
+                    onChange={e => setTelefono(e.target.value)}
+                />
+                {errorTelefono && <p className="error">{errorTelefono}</p>}
             </div>
 
             <div className="caja_input">

@@ -9,13 +9,14 @@ const RegistroHuesped = () => {
     const { datosReserva } = useReserva();
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     const DatosReservaIncompletos = Object.values(datosReserva).some(value => !value);
-    //     if (DatosReservaIncompletos) {
-    //         alert("Por favor complete primero el formulario de reserva.");
-    //         navigate("/registroReservas");
-    //     }
-    // }, []);
+    //* Verifica que existan datos de reserva, en caso de que no regresa a dicho formulario
+    useEffect(() => {
+        const DatosReservaIncompletos = Object.values(datosReserva).some(value => !value);
+        if (DatosReservaIncompletos) {
+            alert("Por favor complete primero el formulario de reserva.");
+            navigate("/registroReservas");
+        }
+    }, []);
 
     return (
         <div id='contenedor__registroHuesped'>
