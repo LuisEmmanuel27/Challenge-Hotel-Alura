@@ -14,9 +14,14 @@ import com.luis.hotel.modelo.Huesped;
 public class HuespedDao {
 
     private ConnectionFactory connectionFactory;
+    private ReservaDao reservaDao;
 
     public HuespedDao(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
+    }
+
+    public HuespedDao(ReservaDao reservaDao) {
+        this.reservaDao = reservaDao;
     }
 
     public void agregarHuesped(Huesped huesped) throws SQLException {
@@ -69,6 +74,37 @@ public class HuespedDao {
         }
 
         return huespedes;
+    }
+
+    public Huesped buscarHuespedPorId(Integer id) throws SQLException {
+        Connection connection = connectionFactory.recuperaConexion();
+        Huesped huesped = null;
+
+        String sql = "SELECT id, nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva FROM huesped WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String nombre = resultSet.getString("nombre");
+                String apellido = resultSet.getString("apellido");
+                java.sql.Date fechaNacimiento = resultSet.getDate("fechaNacimiento");
+                String nacionalidad = resultSet.getString("nacionalidad");
+                String telefono = resultSet.getString("telefono");
+                Integer idReserva = resultSet.getInt("idReserva");
+
+                huesped = new Huesped(id, nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al buscar huésped por ID");
+        } finally {
+            connection.close();
+        }
+
+        return huesped;
     }
 
     public Huesped buscarHuespedPorReserva(Integer idReserva) throws SQLException {
@@ -170,10 +206,20 @@ public class HuespedDao {
         }
     }
 
-    // @Override
-    // public void eliminarHuesped(Integer id) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'eliminarHuesped'");
-    // }
+    public void eliminarHuesped(Integer id) throws SQLException {
+        Connection connection = connectionFactory.recuperaConexion();
+
+        String sql = "DELETE FROM huesped WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al eliminar huesped");
+        } finally {
+            connection.close();
+        }
+    }
+
 }

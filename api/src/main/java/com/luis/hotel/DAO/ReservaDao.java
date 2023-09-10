@@ -132,11 +132,19 @@ public class ReservaDao {
         }
     }
 
-    // @Override
-    // public void eliminarReserva(String id) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'eliminarReserva'");
-    // }
+    public void eliminarReserva(Integer idReserva) throws SQLException {
+        Connection connection = connectionFactory.recuperaConexion();
 
+        String sql = "DELETE FROM reserva WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, idReserva);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al eliminar reserva");
+        } finally {
+            connection.close();
+        }
+    }
 }

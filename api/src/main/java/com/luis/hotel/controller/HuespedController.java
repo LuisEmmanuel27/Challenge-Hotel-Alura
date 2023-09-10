@@ -136,6 +136,34 @@ public class HuespedController {
             }
         });
 
+        // * Eliminar un huésped por ID */
+        Spark.delete("/huespedEl/:id", (request, response) -> {
+            try {
+                Integer id = Integer.parseInt(request.params(":id"));
+
+                // Verificar si el huésped existe antes de eliminarlo
+                Huesped huespedExistente = huespedDao.buscarHuespedPorId(id);
+
+                if (huespedExistente != null) {
+                    // Llama al DAO para eliminar el huésped y su reserva asociada
+                    huespedDao.eliminarHuesped(id);
+
+                    response.status(200);
+                    return "Huesped eliminado con éxito";
+                } else {
+                    response.status(404);
+                    return "Huesped no encontrado";
+                }
+            } catch (NumberFormatException e) {
+                response.status(400);
+                return "Número de ID no válido";
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.status(500);
+                return "Error al eliminar el huésped";
+            }
+        });
+
     }
 
 }

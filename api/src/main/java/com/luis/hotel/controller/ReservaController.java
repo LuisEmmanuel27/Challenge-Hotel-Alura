@@ -110,6 +110,27 @@ public class ReservaController {
                 return "Error al actualizar la reservación";
             }
         });
+
+        // * Eliminar reserva por ID */
+        Spark.delete("/reservaEl/:id", (request, response) -> {
+            try {
+                Integer idReserva = Integer.parseInt(request.params(":id"));
+
+                // Llama a la función del DAO para eliminar la reserva
+                reservaDao.eliminarReserva(idReserva);
+
+                response.status(200);
+                return "Reserva eliminada con éxito";
+            } catch (NumberFormatException e) {
+                response.status(400);
+                return "Número de ID de reserva no válido";
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.status(500);
+                return "Error al eliminar la reserva";
+            }
+        });
+
     }
 
 }
