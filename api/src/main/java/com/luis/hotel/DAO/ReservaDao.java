@@ -2,8 +2,10 @@ package com.luis.hotel.DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-// import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.luis.hotel.factory.ConnectionFactory;
 import com.luis.hotel.modelo.Reserva;
@@ -39,18 +41,39 @@ public class ReservaDao {
         }
     }
 
+    public List<Reserva> listarReservas() throws SQLException {
+        Connection connection = connectionFactory.recuperaConexion();
+        List<Reserva> reservas = new ArrayList<>();
+
+        String sql = "SELECT fechaEntrada, fechaSalida, valor, formaPago FROM reserva";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                java.sql.Date fechaEntrada = resultSet.getDate("fechaEntrada");
+                java.sql.Date fechaSalida = resultSet.getDate("fechaSalida");
+                double valor = resultSet.getDouble("valor");
+                String formaPago = resultSet.getString("formaPago"); // Corrección aquí
+
+                Reserva reserva = new Reserva(fechaSalida, fechaEntrada, valor, formaPago);
+                reservas.add(reserva);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al listar reservas");
+        } finally {
+            connection.close();
+        }
+
+        return reservas;
+    }
+
     // @Override
     // public Reserva buscarReservaPorId(Integer id) {
     // // TODO Auto-generated method stub
     // throw new UnsupportedOperationException("Unimplemented method
     // 'buscarReservaPorId'");
-    // }
-
-    // @Override
-    // public List<Reserva> listarReservas() {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'listarReservas'");
     // }
 
     // @Override

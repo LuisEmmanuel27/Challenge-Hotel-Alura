@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Reserva {
 
+    @JsonIgnore
     private Integer id;
     private Date fechaEntrada;
     private Date fechaSalida;
@@ -36,6 +38,13 @@ public class Reserva {
             e.printStackTrace();
             // Manejar el error de análisis de fecha aquí si es necesario
         }
+        this.valor = valor;
+        this.formaPago = formaPago;
+    }
+
+    public Reserva(java.sql.Date fechaSalida, java.sql.Date fechaEntrada, double valor, String formaPago) {
+        this.fechaEntrada = fechaEntrada;
+        this.fechaSalida = fechaSalida;
         this.valor = valor;
         this.formaPago = formaPago;
     }
