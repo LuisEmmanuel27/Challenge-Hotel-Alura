@@ -2,8 +2,6 @@ package com.luis.hotel.controller;
 
 import java.util.List;
 
-import org.eclipse.jetty.util.ajax.JSON;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luis.hotel.DAO.ReservaDao;
 import com.luis.hotel.factory.ConnectionFactory;
