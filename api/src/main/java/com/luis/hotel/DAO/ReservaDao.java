@@ -21,10 +21,9 @@ public class ReservaDao {
     public Boolean agregarReserva(Reserva reserva) throws SQLException {
         Connection connection = connectionFactory.recuperaConexion();
 
-        String sqlStatement = "INSERT INTO reserva (fechaEntrada, fechaSalida, valor, formaPago) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO reserva (fechaEntrada, fechaSalida, valor, formaPago) VALUES (?, ?, ?, ?)";
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(sqlStatement);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setDate(1, new java.sql.Date(reserva.getFechaEntrada().getTime()));
             statement.setDate(2, new java.sql.Date(reserva.getFechaSalida().getTime()));
             statement.setDouble(3, reserva.getValor());
@@ -69,12 +68,34 @@ public class ReservaDao {
         return reservas;
     }
 
-    // @Override
-    // public Reserva buscarReservaPorId(Integer id) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'buscarReservaPorId'");
-    // }
+    public Reserva buscarReservaPorId(Integer id) throws SQLException {
+        Connection connection = connectionFactory.recuperaConexion();
+        Reserva reserva = null; // en caso de no encontrar nada
+
+        String sql = "SELECT fechaEntrada, fechaSalida, valor, formaPago FROM reserva WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                java.sql.Date fechaEntrada = resultSet.getDate("fechaEntrada");
+                java.sql.Date fechaSalida = resultSet.getDate("fechaSalida");
+                double valor = resultSet.getDouble("valor");
+                String formaPago = resultSet.getString("formaPago");
+
+                reserva = new Reserva(fechaSalida, fechaEntrada, valor, formaPago);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al buscar reserva por ID");
+        } finally {
+            connection.close();
+        }
+
+        return reserva;
+    }
 
     // @Override
     // public void actualizarReserva(Reserva reserva) {
