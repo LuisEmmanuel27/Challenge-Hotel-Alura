@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.luis.hotel.factory.ConnectionFactory;
 import com.luis.hotel.modelo.Reserva;
@@ -97,12 +98,39 @@ public class ReservaDao {
         return reserva;
     }
 
-    // @Override
-    // public void actualizarReserva(Reserva reserva) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'actualizarReserva'");
-    // }
+    public void actualizarReserva(Integer id, Map<String, Object> camposActualizados) throws SQLException {
+        Connection connection = connectionFactory.recuperaConexion();
+
+        StringBuilder sql = new StringBuilder("UPDATE reserva SET ");
+        List<Object> valores = new ArrayList<>();
+
+        // Construir la consulta SQL dinámicamente
+        for (String campo : camposActualizados.keySet()) {
+            sql.append(campo).append(" = ?, ");
+            valores.add(camposActualizados.get(campo));
+        }
+
+        // Eliminar la última coma y espacio en blanco
+        sql.setLength(sql.length() - 2);
+
+        sql.append(" WHERE id = ?");
+
+        try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+            // Establecer valores de los campos actualizados
+            for (int i = 0; i < valores.size(); i++) {
+                statement.setObject(i + 1, valores.get(i));
+            }
+            // Establecer el ID de la reserva
+            statement.setInt(valores.size() + 1, id);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al actualizar reserva");
+        } finally {
+            connection.close();
+        }
+    }
 
     // @Override
     // public void eliminarReserva(String id) {

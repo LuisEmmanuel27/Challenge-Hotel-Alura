@@ -1,8 +1,11 @@
 package com.luis.hotel.controller;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luis.hotel.DAO.ReservaDao;
 import com.luis.hotel.factory.ConnectionFactory;
@@ -73,6 +76,38 @@ public class ReservaController {
                 e.printStackTrace();
                 response.status(500);
                 return "Error al buscar ID de reserva"; // Manejar otros errores
+            }
+        });
+
+        // *Actualizar datos de la reserva */
+        Spark.put("/reservaAct/:id", (request, response) -> {
+            try {
+                Integer id = Integer.parseInt(request.params(":id"));
+                Map<String, Object> camposActualizados = new ObjectMapper().readValue(request.body(),
+                        new TypeReference<Map<String, Object>>() {
+                        });
+
+                if (camposActualizados.isEmpty()) {
+                    response.status(400);
+                    return "Datos de reserva no válidos";
+                }
+
+                // Llama al método del DAO para actualizar el huésped con los campos
+                // proporcionados
+                reservaDao.actualizarReserva(id, camposActualizados);
+
+                response.status(200);
+                return "Reserva actualizada con éxito";
+            } catch (NumberFormatException e) {
+                response.status(400);
+                return "Número de ID no válido";
+            } catch (IOException e) {
+                response.status(400);
+                return "Datos de reserva no válidos";
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.status(500);
+                return "Error al actualizar la reservación";
             }
         });
     }
