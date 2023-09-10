@@ -28,12 +28,8 @@ public class UsuarioController {
             String nombreUsuario = body.get("nombreUsuario");
             String contrasenaUsuario = body.get("contrasenaUsuario");
 
-            System.out.println(nombreUsuario + ", " + contrasenaUsuario);
-
             // Intenta autenticar al usuario utilizando el UsuarioDao
             Usuario usuario = usuarioDao.buscarUsuario(nombreUsuario, contrasenaUsuario);
-
-            System.out.println(usuario);
 
             if (usuario != null) {
                 // El usuario se ha autenticado correctamente

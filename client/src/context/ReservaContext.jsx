@@ -6,6 +6,7 @@ const ReservaContext = createContext();
 // Proveedor del contexto que contendrá los datos
 export function ReservaProvider({ children }) {
   const [datosReserva, setDatosReserva] = useState({
+    id: null,
     fechaEntrada: null,
     fechaSalida: null,
     valor: null,

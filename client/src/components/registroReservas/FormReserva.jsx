@@ -61,6 +61,7 @@ const FormReserva = () => {
 
             setDatosReserva({
                 ...datosReserva,
+                id: idReserva,
                 fechaEntrada,
                 fechaSalida,
                 valor,

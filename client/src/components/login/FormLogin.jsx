@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Error from "../Error";
-import { useAuth } from "../../context/AuthContext";
+import { loginUser } from "../../helper/api";
 
 const FormLogin = () => {
 
-    const { login } = useAuth();
     const [error, setError] = useState(false);
     const [nombreUsuario, setNombreUsuario] = useState(null);
     const [contrasenaUsuario, setContrasenaUsuario] = useState(null);
@@ -47,45 +46,43 @@ const FormLogin = () => {
     }
 
     // * Funcion que requiere la base de datos levantada
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-
-    //     let flag = true;
-
-    //     flag = verificarDatos(nombreUsuario, contrasenaUsuario, flag);
-    //     console.log(flag);
-
-    //     if (flag === true) {
-    //         // Almacena los valores en variables locales
-    //         const newFormData = {
-    //             nombreUsuario: nombreUsuario,
-    //             contrasenaUsuario: contrasenaUsuario,
-    //         };
-
-    //         try {
-    //             const user = await loginUser(newFormData);
-    //             localStorage.setItem("authToken", "tuTokenAqui");
-    //             login(user);
-    //             navigate('/menuPrincipal');
-    //         } catch (err) {
-    //             setError(true);
-    //             console.log('Error de inicio de sesion: ', err);
-    //         }
-    //     } else {
-    //         console.log("hay datos nulos");
-    //         return;
-    //     }
-    // }
-
-    // ! Funcion para no estar levantando la base de datos
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Almacenar el token de autenticación en el almacenamiento local
-        localStorage.setItem("authToken", "tuTokenAqui");
+        let flag = true;
 
-        navigate('/menuPrincipal');
+        flag = verificarDatos(nombreUsuario, contrasenaUsuario, flag);
+
+        if (flag === true) {
+            // Almacena los valores en variables locales
+            const newFormData = {
+                nombreUsuario: nombreUsuario,
+                contrasenaUsuario: contrasenaUsuario,
+            };
+
+            try {
+                await loginUser(newFormData);
+                localStorage.setItem("authToken", "tuTokenAqui");
+                navigate('/menuPrincipal');
+            } catch (err) {
+                setError(true);
+                console.log('Error de inicio de sesion: ', err);
+            }
+        } else {
+            alert("No llenaste todos los campos");
+            return;
+        }
     }
+
+    // ! Funcion para no estar levantando la base de datos
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+
+    //     // Almacenar el token de autenticación en el almacenamiento local
+    //     localStorage.setItem("authToken", "tuTokenAqui");
+
+    //     navigate('/menuPrincipal');
+    // }
 
     return (
 
