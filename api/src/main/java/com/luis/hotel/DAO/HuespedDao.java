@@ -14,14 +14,9 @@ import com.luis.hotel.modelo.Huesped;
 public class HuespedDao {
 
     private ConnectionFactory connectionFactory;
-    private ReservaDao reservaDao;
 
     public HuespedDao(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
-    }
-
-    public HuespedDao(ReservaDao reservaDao) {
-        this.reservaDao = reservaDao;
     }
 
     public void agregarHuesped(Huesped huesped) throws SQLException {
