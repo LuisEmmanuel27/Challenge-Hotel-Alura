@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.luis.hotel.factory.ConnectionFactory;
 import com.luis.hotel.modelo.Huesped;
@@ -135,12 +136,39 @@ public class HuespedDao {
         return huesped;
     }
 
-    // @Override
-    // public void actualizarHuesped(Huesped huesped) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'actualizarHuesped'");
-    // }
+    public void actualizarHuesped(Integer id, Map<String, Object> camposActualizados) throws SQLException {
+        Connection connection = connectionFactory.recuperaConexion();
+
+        StringBuilder sql = new StringBuilder("UPDATE huesped SET ");
+        List<Object> valores = new ArrayList<>();
+
+        // Construir la consulta SQL dinámicamente
+        for (String campo : camposActualizados.keySet()) {
+            sql.append(campo).append(" = ?, ");
+            valores.add(camposActualizados.get(campo));
+        }
+
+        // Eliminar la última coma y espacio en blanco
+        sql.setLength(sql.length() - 2);
+
+        sql.append(" WHERE id = ?");
+
+        try (PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+            // Establecer valores de los campos actualizados
+            for (int i = 0; i < valores.size(); i++) {
+                statement.setObject(i + 1, valores.get(i));
+            }
+            // Establecer el ID del huésped
+            statement.setInt(valores.size() + 1, id);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al actualizar huésped");
+        } finally {
+            connection.close();
+        }
+    }
 
     // @Override
     // public void eliminarHuesped(Integer id) {

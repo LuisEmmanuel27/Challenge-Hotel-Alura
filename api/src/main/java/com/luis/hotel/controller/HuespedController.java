@@ -1,13 +1,16 @@
 package com.luis.hotel.controller;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luis.hotel.DAO.HuespedDao;
 import com.luis.hotel.exception.ApellidoInvalidoException;
 import com.luis.hotel.factory.ConnectionFactory;
 import com.luis.hotel.modelo.Huesped;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import spark.Spark;
 
@@ -100,6 +103,39 @@ public class HuespedController {
                 return "Error al buscar huesped por apellido"; // Manejar otros errores
             }
         });
+
+        // * Actualizar datos del huesped */
+        Spark.put("/huespedAct/:id", (request, response) -> {
+            try {
+                Integer id = Integer.parseInt(request.params(":id"));
+                Map<String, Object> camposActualizados = new ObjectMapper().readValue(request.body(),
+                        new TypeReference<Map<String, Object>>() {
+                        });
+
+                if (camposActualizados.isEmpty()) {
+                    response.status(400);
+                    return "Datos de huésped no válidos";
+                }
+
+                // Llama al método del DAO para actualizar el huésped con los campos
+                // proporcionados
+                huespedDao.actualizarHuesped(id, camposActualizados);
+
+                response.status(200);
+                return "Huésped actualizado con éxito";
+            } catch (NumberFormatException e) {
+                response.status(400);
+                return "Número de ID no válido";
+            } catch (IOException e) {
+                response.status(400);
+                return "Datos de huésped no válidos";
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.status(500);
+                return "Error al actualizar el huésped";
+            }
+        });
+
     }
 
 }
