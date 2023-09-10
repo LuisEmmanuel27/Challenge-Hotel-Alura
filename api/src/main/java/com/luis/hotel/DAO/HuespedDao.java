@@ -70,19 +70,70 @@ public class HuespedDao {
         return huespedes;
     }
 
-    // @Override
-    // public Huesped buscarHuespedPorId(Integer id) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'buscarHuespedPorId'");
-    // }
+    public Huesped buscarHuespedPorReserva(Integer idReserva) throws SQLException {
+        Connection connection = connectionFactory.recuperaConexion();
+        Huesped huesped = null; // Inicializamos a null, ya que puede que no se encuentre ningún huésped con esa
+                                // reserva
 
-    // @Override
-    // public Huesped buscarPorApellido(String apellido) {
-    // // TODO Auto-generated method stub
-    // throw new UnsupportedOperationException("Unimplemented method
-    // 'buscarPorApellido'");
-    // }
+        String sql = "SELECT nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva FROM huesped WHERE idReserva = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, idReserva); // Asignamos el valor del parámetro idReserva
+
+            ResultSet resultSet = statement.executeQuery();
+
+            // * No es necesario obtener idReserva ya que ya estamos filtrando por él
+            if (resultSet.next()) {
+                String nombre = resultSet.getString("nombre");
+                String apellido = resultSet.getString("apellido");
+                java.sql.Date fechaNacimiento = resultSet.getDate("fechaNacimiento");
+                String nacionalidad = resultSet.getString("nacionalidad");
+                String telefono = resultSet.getString("telefono");
+
+                huesped = new Huesped(nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al buscar huesped por ID de Reserva");
+        } finally {
+            connection.close();
+        }
+
+        return huesped;
+    }
+
+    public Huesped buscarPorApellido(String apellido) throws SQLException {
+        Connection connection = connectionFactory.recuperaConexion();
+        Huesped huesped = null; // Inicializamos a null, ya que puede que no se encuentre ningún huésped con esa
+                                // reserva
+
+        String sql = "SELECT nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva FROM huesped WHERE apellido = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, apellido);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            // * No es necesario obtener apellido ya que ya estamos filtrando por él
+            if (resultSet.next()) {
+                String nombre = resultSet.getString("nombre");
+                java.sql.Date fechaNacimiento = resultSet.getDate("fechaNacimiento");
+                String nacionalidad = resultSet.getString("nacionalidad");
+                String telefono = resultSet.getString("telefono");
+                Integer idReserva = resultSet.getInt("idReserva");
+
+                huesped = new Huesped(nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al buscar huesped por apellido");
+        } finally {
+            connection.close();
+        }
+
+        return huesped;
+    }
 
     // @Override
     // public void actualizarHuesped(Huesped huesped) {
