@@ -20,29 +20,6 @@ public class ReservaDao {
         this.connectionFactory = connectionFactory;
     }
 
-    // public Boolean agregarReserva(Reserva reserva) throws SQLException {
-    // Connection connection = connectionFactory.recuperaConexion();
-
-    // String sql = "INSERT INTO reserva (fechaEntrada, fechaSalida, valor,
-    // formaPago) VALUES (?, ?, ?, ?)";
-
-    // try (PreparedStatement statement = connection.prepareStatement(sql)) {
-    // statement.setDate(1, new java.sql.Date(reserva.getFechaEntrada().getTime()));
-    // statement.setDate(2, new java.sql.Date(reserva.getFechaSalida().getTime()));
-    // statement.setDouble(3, reserva.getValor());
-    // statement.setString(4, reserva.getFormaPago());
-
-    // statement.execute();
-    // return true;
-    // } catch (SQLException e) {
-    // e.printStackTrace();
-    // System.out.println("ups un error surgio: " + e);
-    // return false;
-    // } finally {
-    // connection.close();
-    // }
-    // }
-
     public Long agregarReserva(Reserva reserva) throws SQLException {
         Connection connection = connectionFactory.recuperaConexion();
 
@@ -117,7 +94,7 @@ public class ReservaDao {
                 double valor = resultSet.getDouble("valor");
                 String formaPago = resultSet.getString("formaPago");
 
-                reserva = new Reserva(fechaSalida, fechaEntrada, valor, formaPago);
+                reserva = new Reserva(id, fechaSalida, fechaEntrada, valor, formaPago);
             }
         } catch (SQLException e) {
             e.printStackTrace();

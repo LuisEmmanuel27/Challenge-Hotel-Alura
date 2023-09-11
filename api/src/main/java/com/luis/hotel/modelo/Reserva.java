@@ -5,12 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Reserva {
 
-    @JsonIgnore
     private Integer id;
     private Date fechaEntrada;
     private Date fechaSalida;

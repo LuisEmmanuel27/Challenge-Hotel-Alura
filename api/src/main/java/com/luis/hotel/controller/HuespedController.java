@@ -105,7 +105,39 @@ public class HuespedController {
         });
 
         // * Actualizar datos del huesped */
-        Spark.put("/huespedAct/:id", (request, response) -> {
+        // Spark.put("/huesped/actualizar/:id", (request, response) -> {
+        // try {
+        // Integer id = Integer.parseInt(request.params(":id"));
+        // Map<String, Object> camposActualizados = new
+        // ObjectMapper().readValue(request.body(),
+        // new TypeReference<Map<String, Object>>() {
+        // });
+
+        // if (camposActualizados.isEmpty()) {
+        // response.status(400);
+        // return "Datos de huésped no válidos";
+        // }
+
+        // // Llama al método del DAO para actualizar el huésped con los campos
+        // // proporcionados
+        // huespedDao.actualizarHuesped(id, camposActualizados);
+
+        // response.status(200);
+        // return "Huésped actualizado con éxito";
+        // } catch (NumberFormatException e) {
+        // response.status(400);
+        // return "Número de ID no válido";
+        // } catch (IOException e) {
+        // response.status(400);
+        // return "Datos de huésped no válidos";
+        // } catch (SQLException e) {
+        // e.printStackTrace();
+        // response.status(500);
+        // return "Error al actualizar el huésped";
+        // }
+        // });
+
+        Spark.put("/huesped/actualizar/:id", (request, response) -> {
             try {
                 Integer id = Integer.parseInt(request.params(":id"));
                 Map<String, Object> camposActualizados = new ObjectMapper().readValue(request.body(),
@@ -115,6 +147,13 @@ public class HuespedController {
                 if (camposActualizados.isEmpty()) {
                     response.status(400);
                     return "Datos de huésped no válidos";
+                }
+
+                // Verificar si la idReserva existe antes de actualizar el huésped
+                Huesped huespedExistente = huespedDao.buscarHuespedPorId(id);
+                if (huespedExistente == null) {
+                    response.status(404); // Not Found
+                    return "El huesped no existe";
                 }
 
                 // Llama al método del DAO para actualizar el huésped con los campos

@@ -107,7 +107,7 @@ public class HuespedDao {
         Huesped huesped = null; // Inicializamos a null, ya que puede que no se encuentre ningún huésped con esa
                                 // reserva
 
-        String sql = "SELECT nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva FROM huesped WHERE idReserva = ?";
+        String sql = "SELECT * FROM huesped WHERE idReserva = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, idReserva); // Asignamos el valor del parámetro idReserva
@@ -116,13 +116,14 @@ public class HuespedDao {
 
             // * No es necesario obtener idReserva ya que ya estamos filtrando por él
             if (resultSet.next()) {
+                Integer id = resultSet.getInt("id");
                 String nombre = resultSet.getString("nombre");
                 String apellido = resultSet.getString("apellido");
                 java.sql.Date fechaNacimiento = resultSet.getDate("fechaNacimiento");
                 String nacionalidad = resultSet.getString("nacionalidad");
                 String telefono = resultSet.getString("telefono");
 
-                huesped = new Huesped(nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva);
+                huesped = new Huesped(id, nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva);
             }
         } catch (SQLException e) {
             e.printStackTrace();

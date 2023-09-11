@@ -16,6 +16,9 @@ const TablaResultados = ({ responseHuesped, responseReserva }) => {
     return (
         <div className='contenedor__tabla'>
             <div className='resultados__huesped resultados'>
+
+                <h1>Tabla de huésped</h1>
+
                 <table className='huesped tabla'>
                     <thead>
                         <tr>
@@ -28,17 +31,15 @@ const TablaResultados = ({ responseHuesped, responseReserva }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {huespedDatos && <RenglonesHuesped huespedDatos={huespedDatos} />}
+                        {huespedDatos && <RenglonesHuesped huespedDatos={huespedDatos} setHuespedDatos={setHuespedDatos} />}
                     </tbody>
                 </table>
-
-                <div className='btn__caja'>
-                    <button className='editar'>editar</button>
-                    <button className='eliminar'>eliminar</button>
-                </div>
             </div>
 
             <div className='resultados__reservacion resultados'>
+
+                <h1>Tabla de reservación</h1>
+
                 <table className='reserva tabla'>
                     <thead>
                         <tr>
@@ -49,14 +50,9 @@ const TablaResultados = ({ responseHuesped, responseReserva }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {reservaDatos && <RenglonesReserva reservaDatos={reservaDatos} />}
+                        {reservaDatos && <RenglonesReserva reservaDatos={reservaDatos} setReservaDatos={setReservaDatos} />}
                     </tbody>
                 </table>
-
-                <div className='btn__caja'>
-                    <button className='editar'>editar</button>
-                    <button className='eliminar'>eliminar</button>
-                </div>
             </div>
         </div>
     )
