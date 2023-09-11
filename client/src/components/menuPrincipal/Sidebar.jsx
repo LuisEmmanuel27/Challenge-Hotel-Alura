@@ -25,7 +25,7 @@ const Sidebar = () => {
 
                 <div className="btn_nav">
                     <TbUserSearch />
-                    <a href="#">Búsqueda</a>
+                    <Link to="/busqueda">Búsqueda</Link>
                 </div>
             </nav>
 

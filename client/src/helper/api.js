@@ -41,3 +41,23 @@ export const crearHuesped = async (datosHuesped) => {
         throw error;
     }
 };
+
+//* obtener datos huesped por numero reserva */
+export const obtenerHuesped = async (params, value) => {
+    try {
+        const response = await axios.get(`${URL_BASE}/${params}/${value}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+//* obtener datos reserva por numero de reserva */
+export const obtenerReserva = async (value) => {
+    try {
+        const response = await axios.get(`${URL_BASE}/reserva/${value}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

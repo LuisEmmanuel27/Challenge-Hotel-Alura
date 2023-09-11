@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import RegistroReservas from './pages/RegistroReservas/RegistroReservas';
 import RegistroHuesped from './pages/RegistroHuesped/RegistroHuesped';
 import { ReservaProvider } from './context/ReservaContext';
+import Busqueda from './pages/Busqueda/Busqueda';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path='menuPrincipal' element={<ProtectedRoute element={<MenuPrincipal />} />} />
           <Route path='registroReservas' element={<ProtectedRoute element={<RegistroReservas />} />} />
           <Route path='registroHuesped' element={<ProtectedRoute element={<RegistroHuesped />} />} />
+          <Route path='busqueda' element={<ProtectedRoute element={<Busqueda />} />} />
         </Routes>
       </Router>
     </ReservaProvider>
