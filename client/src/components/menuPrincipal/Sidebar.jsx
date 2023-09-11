@@ -1,15 +1,12 @@
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-import { useAuth } from "../../context/AuthContext";
 import { BsCalendarCheck } from "react-icons/bs";
 import { TbUserSearch } from "react-icons/tb";
 
 const Sidebar = () => {
 
-    const { logout } = useAuth();
-
     const handleLogout = () => {
-        logout();
+        localStorage.clear();
     }
 
     return (
