@@ -4,6 +4,7 @@ import SelectNacionalidad from "./SelectNacionalidad";
 import { useReserva } from "../../context/ReservaContext";
 import { useFormValidation } from "../../hook/useFormValidation";
 import { crearHuesped } from "../../helper/api";
+import toast, { Toaster } from 'react-hot-toast';
 
 const FormHuesped = () => {
 
@@ -59,13 +60,32 @@ const FormHuesped = () => {
                     // Maneja la respuesta según tus necesidades
                     console.log('Huesped creado con éxito:', response);
 
+                    toast.success('Huésped agregado', {
+                        position: "bottom-right",
+                        style: {
+                            backgroundColor: "#333",
+                            color: "#fff",
+                            border: "solid 1px #fff",
+                        }
+                    });
+
                     // Puedes redirigir o realizar otras acciones aquí
-                    navigate('/menuPrincipal');
+                    setTimeout(() => {
+                        navigate('/menuPrincipal');
+                    }, 1000);
                 } else {
                     setError(true);
                 }
             } catch (error) {
                 setError(true);
+                toast.error('Error al agregar huésped', {
+                    position: "bottom-right",
+                    style: {
+                        backgroundColor: "red",
+                        color: "#fff",
+                        border: "solid 1px #fff"
+                    }
+                });
             }
         }
     };
@@ -128,6 +148,8 @@ const FormHuesped = () => {
             <button type="submit" className="btn__principal" id="btn_enviar_datos">
                 guardar
             </button>
+
+            <Toaster />
         </form>
     )
 }

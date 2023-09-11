@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css'; // Importa los estilos CSS 
 import SelectFormaPago from './SelectFormaPago';
 import { useReserva } from '../../context/ReservaContext';
 import { crearReserva } from '../../helper/api';
+import toast, { Toaster } from 'react-hot-toast';
 
 // TODO Las reservas tendran un valor de $800 la noche
 const FormReserva = () => {
@@ -74,12 +75,31 @@ const FormReserva = () => {
                         idReserva,
                     });
 
-                    navigate('/registroHuesped');
+                    toast.success('Reservación creada', {
+                        position: "bottom-right",
+                        style: {
+                            backgroundColor: "#333",
+                            color: "#fff",
+                            border: "solid 1px #fff",
+                        }
+                    });
+
+                    setTimeout(() => {
+                        navigate('/registroHuesped');
+                    }, 1000);
                 } else {
                     setError(true);
                 }
             } catch (error) {
                 setError(true);
+                toast.error('Error al agregar huésped', {
+                    position: "bottom-right",
+                    style: {
+                        backgroundColor: "red",
+                        color: "#fff",
+                        border: "solid 1px #fff"
+                    }
+                });
             }
         } else {
             setError(true);
@@ -137,6 +157,8 @@ const FormReserva = () => {
             <button type="submit" className="btn__principal" id="btn_guardar_reservacion">
                 siguiente
             </button>
+
+            <Toaster />
         </form>
     )
 }
