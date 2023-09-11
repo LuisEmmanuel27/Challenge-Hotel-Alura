@@ -19,13 +19,34 @@ public class ReservaController {
         ReservaDao reservaDao = new ReservaDao(connectionFactory);
 
         // * Agregar reservaciones a la BDD */
+        // Spark.post("/reserva", (request, response) -> {
+        // try {
+        // Reserva nuevaReserva = new ObjectMapper().readValue(request.body(),
+        // Reserva.class);
+        // reservaDao.agregarReserva(nuevaReserva);
+        // response.status(201);
+        // return "Reserva creada con exito";
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // response.status(500);
+        // return "Error al crear una reserva";
+        // }
+        // });
+
         Spark.post("/reserva", (request, response) -> {
             try {
-                Reserva nuevaReserva = new ObjectMapper().readValue(request.body(),
-                        Reserva.class);
-                reservaDao.agregarReserva(nuevaReserva);
-                response.status(201);
-                return "Reserva creada con exito";
+                Reserva nuevaReserva = new ObjectMapper().readValue(request.body(), Reserva.class);
+                Long reservaId = reservaDao.agregarReserva(nuevaReserva);
+
+                if (reservaId != null) {
+                    response.status(201);
+                    response.header("Location", "/reserva/" + reservaId); // Opcional: Puedes agregar una cabecera
+                                                                          // "Location" con la URL de la nueva reserva
+                    return "Reserva creada con éxito. ID: " + reservaId;
+                } else {
+                    response.status(500);
+                    return "Error al crear una reserva";
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 response.status(500);

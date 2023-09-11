@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // Importa los estilos CSS por defecto
 import SelectFormaPago from './SelectFormaPago';
 import { useReserva } from '../../context/ReservaContext';
+import { crearReserva } from '../../helper/api';
 
 // TODO Las reservas tendran un valor de $800 la noche
 const FormReserva = () => {
@@ -16,7 +17,7 @@ const FormReserva = () => {
     const navigate = useNavigate();
 
     //* valores del context de reserva
-    const { datosReserva, setDatosReserva, datosHuesped, setDatosHuesped } = useReserva();
+    const { setDatosReserva, datosHuesped, setDatosHuesped } = useReserva();
 
     //* Generar el costo total de la reserva
     useEffect(() => {
@@ -35,49 +36,55 @@ const FormReserva = () => {
         }
     }, [selectedDateIn, selectedDateOut]);
 
-    //* Generar un numero de reserva
-    const generarNumeroReserva = () => {
-        const fechaActual = new Date();
-        const costo = totalCost.replace('$', '');
-        const metodoPago = selectedFormaPago.value;
+    //* obtenemos la id de la respuesta */
+    const extractIdFromResponse = (responseText) => {
+        const matches = responseText.match(/ID: (\d+)/);
+        return matches ? parseInt(matches[1]) : null;
+    };
 
-        const valorAleatorio = Math.floor(Math.random() * 100) + 1;
-
-        const numeroReserva = `${fechaActual.getFullYear()}${fechaActual.getMonth() + 1}${fechaActual.getDate()}${costo}${metodoPago}${valorAleatorio}`;
-
-        return numeroReserva;
-    }
-
-    //* Enviando los datos del formulario
-    const handleSubmit = (e) => {
+    //* Enviamos los datos a la bdd */
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (selectedDateIn && selectedDateOut && selectedFormaPago) {
-            const fechaEntrada = selectedDateIn;
-            const fechaSalida = selectedDateOut;
-            const valor = totalCost;
-            const formaDePago = selectedFormaPago;
-            const idReserva = generarNumeroReserva();
+            const formattedFechaEntrada = selectedDateIn.toISOString().split('T')[0];
+            const formattedFechaSalida = selectedDateOut.toISOString().split('T')[0];
 
-            setDatosReserva({
-                ...datosReserva,
-                id: idReserva,
-                fechaEntrada,
-                fechaSalida,
-                valor,
-                formaDePago,
-            });
+            const datosReserva = {
+                fechaEntrada: formattedFechaEntrada,
+                fechaSalida: formattedFechaSalida,
+                valor: parseFloat(totalCost.replace('$ ', '').replace(',', '')),
+                formaPago: selectedFormaPago.label,
+            };
 
-            setDatosHuesped({
-                ...datosHuesped,
-                idReserva
-            })
+            try {
+                const response = await crearReserva(datosReserva);
+                console.log(response);
 
-            navigate('/registroHuesped');
+                const idReserva = extractIdFromResponse(response);
+
+                if (idReserva !== null) {
+                    setDatosReserva({
+                        ...datosReserva,
+                        id: idReserva,
+                    });
+
+                    setDatosHuesped({
+                        ...datosHuesped,
+                        idReserva,
+                    });
+
+                    navigate('/registroHuesped');
+                } else {
+                    setError(true);
+                }
+            } catch (error) {
+                setError(true);
+            }
         } else {
             setError(true);
         }
-    }
+    };
 
     return (
         <form className='contenedor__input' onSubmit={handleSubmit}>

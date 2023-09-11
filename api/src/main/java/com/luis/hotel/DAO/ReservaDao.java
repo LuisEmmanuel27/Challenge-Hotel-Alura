@@ -1,5 +1,6 @@
 package com.luis.hotel.DAO;
 
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,23 +20,53 @@ public class ReservaDao {
         this.connectionFactory = connectionFactory;
     }
 
-    public Boolean agregarReserva(Reserva reserva) throws SQLException {
+    // public Boolean agregarReserva(Reserva reserva) throws SQLException {
+    // Connection connection = connectionFactory.recuperaConexion();
+
+    // String sql = "INSERT INTO reserva (fechaEntrada, fechaSalida, valor,
+    // formaPago) VALUES (?, ?, ?, ?)";
+
+    // try (PreparedStatement statement = connection.prepareStatement(sql)) {
+    // statement.setDate(1, new java.sql.Date(reserva.getFechaEntrada().getTime()));
+    // statement.setDate(2, new java.sql.Date(reserva.getFechaSalida().getTime()));
+    // statement.setDouble(3, reserva.getValor());
+    // statement.setString(4, reserva.getFormaPago());
+
+    // statement.execute();
+    // return true;
+    // } catch (SQLException e) {
+    // e.printStackTrace();
+    // System.out.println("ups un error surgio: " + e);
+    // return false;
+    // } finally {
+    // connection.close();
+    // }
+    // }
+
+    public Long agregarReserva(Reserva reserva) throws SQLException {
         Connection connection = connectionFactory.recuperaConexion();
 
         String sql = "INSERT INTO reserva (fechaEntrada, fechaSalida, valor, formaPago) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setDate(1, new java.sql.Date(reserva.getFechaEntrada().getTime()));
             statement.setDate(2, new java.sql.Date(reserva.getFechaSalida().getTime()));
             statement.setDouble(3, reserva.getValor());
             statement.setString(4, reserva.getFormaPago());
 
             statement.execute();
-            return true;
+
+            // Obtén el ID generado por la base de datos
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getLong(1);
+            } else {
+                throw new SQLException("No se pudo obtener el ID de la reserva creada.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("ups un error surgio: " + e);
-            return false;
+            return null; // Puedes manejar el error de otra manera si lo deseas
         } finally {
             connection.close();
         }

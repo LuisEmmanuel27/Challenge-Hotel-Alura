@@ -1,8 +1,9 @@
-import ReactDatePicker from "react-datepicker"
+import ReactDatePicker from "react-datepicker";
+import { useNavigate } from "react-router-dom";
 import SelectNacionalidad from "./SelectNacionalidad";
 import { useReserva } from "../../context/ReservaContext";
 import { useFormValidation } from "../../hook/useFormValidation";
-import { useEffect } from "react";
+import { crearHuesped } from "../../helper/api";
 
 const FormHuesped = () => {
 
@@ -27,35 +28,47 @@ const FormHuesped = () => {
 
     } = useFormValidation();
 
-    const { datosReserva, datosHuesped, setDatosHuesped } = useReserva();
+    const { datosHuesped } = useReserva();
+    const navigate = useNavigate();
 
     // TODO Falta el envio de datos con ayuda del context
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const formularioValido = validarFormulario();
 
         if (!formularioValido) {
-
-            alert("error");
-
+            alert("Error en el formulario");
         } else {
-
-            setDatosHuesped((prevDatosHuesped) => ({
-                ...prevDatosHuesped,
+            // Construye el objeto de datos del huésped
+            const datosHuespedNuevo = {  // Cambia el nombre de la variable a datosHuespedNuevo
                 nombre,
                 apellido,
-                fechaNacimiento,
-                nacionalidad,
+                fechaNacimiento: fechaNacimiento.toISOString().split('T')[0],
+                nacionalidad: nacionalidad.label,
                 telefono,
-            }));
-        }
-    }
+                idReserva: datosHuesped.idReserva, // Asegúrate de ajustar esto según cómo tengas la referencia a la reserva
+            };
 
-    useEffect(() => {
-        console.log(datosReserva);
-        console.log(datosHuesped);
-    }, [datosHuesped]);
+            console.log(datosHuespedNuevo);
+
+            try {
+                const response = await crearHuesped(datosHuespedNuevo);
+
+                if (response) {
+                    // Maneja la respuesta según tus necesidades
+                    console.log('Huesped creado con éxito:', response);
+
+                    // Puedes redirigir o realizar otras acciones aquí
+                    navigate('/menuPrincipal');
+                } else {
+                    setError(true);
+                }
+            } catch (error) {
+                setError(true);
+            }
+        }
+    };
 
     return (
         <form className="contenedor__input" onSubmit={handleSubmit}>
