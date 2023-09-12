@@ -59,7 +59,7 @@ const TablaReserva = ({ responseReserva }) => {
                 })
             }).catch((error) => {
                 console.error('Error en la petición PUT:', error);
-                toast.error("Cambios correctamente guardados", {
+                toast.error("Error al guardar los cambios", {
                     style: {
                         backgroundColor: "red",
                         color: "white"
@@ -146,12 +146,10 @@ const TablaReserva = ({ responseReserva }) => {
 
             <div className='caja_btn'>
                 {editable ? (
-                    <button onClick={handleSaveClick}>guardar</button>
+                    <button className='editar' onClick={handleSaveClick}>guardar</button>
                 ) : (
-                    <button onClick={handleEditClick} disabled={!responseReserva}>editar</button>
+                    <button className='editar' onClick={handleEditClick} disabled={!responseReserva}>editar</button>
                 )}
-
-                <button disabled={!responseReserva}>eliminar</button>
             </div>
 
             <Toaster />

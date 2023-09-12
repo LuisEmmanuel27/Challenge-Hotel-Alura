@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { formatDate } from '../../helper/formatDate';
-import { actualizarHuesped } from '../../helper/api';
+import { actualizarHuesped, eliminarHuesped, eliminarReserva } from '../../helper/api';
 import toast, { Toaster } from "react-hot-toast";
 
 const TablaHuesped = ({ responseHuesped }) => {
@@ -39,7 +39,7 @@ const TablaHuesped = ({ responseHuesped }) => {
             })
             .catch((error) => {
                 console.error('Error en la petición PUT:', error);
-                toast.error("Cambios correctamente guardados", {
+                toast.error("Error al guardar los cambios", {
                     style: {
                         backgroundColor: "red",
                         color: "white"
@@ -62,6 +62,60 @@ const TablaHuesped = ({ responseHuesped }) => {
             ...prevData,
             [name]: value
         }));
+    };
+
+    const handleEliminarClick = async (e) => {
+        e.preventDefault();
+
+        if (window.confirm("¿Estás seguro de que deseas eliminar al huésped y su reserva?")) {
+            try {
+                if (responseHuesped && responseHuesped.idReserva) {
+                    // Eliminar huesped
+                    await eliminarHuesped(responseHuesped.id);
+                    // Eliminar reserva
+                    await eliminarReserva(responseHuesped.idReserva);
+
+                    // Si ambas eliminaciones tienen éxito, mostrar una notificación de éxito
+                    toast.success("Eliminación exitosa", {
+                        style: {
+                            backgroundColor: "#333",
+                            color: "#fff"
+                        }
+                    });
+                    console.log("Eliminación exitosa.");
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+                } else {
+                    console.error("No se pudo obtener el ID de la reserva para eliminar el huésped.");
+                    // Mostrar una notificación de error si no se puede obtener el ID de la reserva
+                    toast.error("Eliminación fallida: No se pudo obtener el ID de la reserva", {
+                        style: {
+                            backgroundColor: "red",
+                            color: "#fff"
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Error al eliminar el huésped o la reserva:", error);
+                // Mostrar una notificación de error si ocurre un error al eliminar cualquiera de los dos
+                toast.error("Eliminación fallida", {
+                    style: {
+                        backgroundColor: "red",
+                        color: "#fff"
+                    }
+                });
+            }
+        } else {
+            // El usuario canceló la eliminación
+            toast.warning("Eliminación cancelada", {
+                style: {
+                    backgroundColor: "orange",
+                    color: "#fff"
+                }
+            });
+        }
     };
 
     return (
@@ -144,12 +198,12 @@ const TablaHuesped = ({ responseHuesped }) => {
 
             <div className='caja_btn'>
                 {editable ? (
-                    <button onClick={handleSaveClick}>guardar</button>
+                    <button className='editar' onClick={handleSaveClick}>guardar</button>
                 ) : (
-                    <button onClick={handleEditClick} disabled={!responseHuesped}>editar</button>
+                    <button className='editar' onClick={handleEditClick} disabled={!responseHuesped}>editar</button>
                 )}
 
-                <button disabled={!responseHuesped}>eliminar</button>
+                <button className='eliminar' onClick={handleEliminarClick} disabled={!responseHuesped}>eliminar</button>
             </div>
 
             <Toaster />

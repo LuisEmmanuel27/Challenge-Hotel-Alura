@@ -76,20 +76,25 @@ export const actualizarReserva = async (reservaId, datosActualizados) => {
     return axios.put(`${URL_BASE}/reservaAct/${reservaId}`, json);
 }
 
+//* eliminar datos de huesped */
 export const eliminarHuesped = async (huespedId) => {
     try {
         const response = await axios.delete(`${URL_BASE}/huespedEl/${huespedId}`);
-        return response;
+        return response.data; // Devuelve solo los datos de respuesta
     } catch (error) {
-        throw error;
+        console.error("Error al eliminar el huésped:", error);
+        throw error; // Lanza el error para que pueda ser manejado en el lugar donde se llama a la función
     }
 }
 
+
+//* eliminar datos de reserva */
 export const eliminarReserva = async (reservaId) => {
     try {
         const response = await axios.delete(`${URL_BASE}/reservaEl/${reservaId}`);
-        return response;
+        return response.data; // Devuelve solo los datos de respuesta
     } catch (error) {
-        throw error;
+        console.error("Error al eliminar la reserva:", error);
+        throw error; // Lanza el error para que pueda ser manejado en el lugar donde se llama a la función
     }
 }
