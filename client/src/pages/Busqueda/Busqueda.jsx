@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import SelectParametroBusqueda from '../../components/busqueda/SelectParametroBusqueda';
-import TablaResultados from '../../components/busqueda/TablaResultados';
 import logo from "../../assets/logo.png";
 import toast, { Toaster } from "react-hot-toast";
 import { obtenerHuesped, obtenerReserva } from '../../helper/api';
+import TablaHuesped from '../../components/busqueda/TablaHuesped';
+import TablaReserva from '../../components/busqueda/TablaReserva';
 
 const Busqueda = () => {
 
@@ -80,7 +81,8 @@ const Busqueda = () => {
             </div>
 
             <div className='area__inferior'>
-                <TablaResultados responseHuesped={responseHuesped} responseReserva={responseReserva} />
+                <TablaHuesped responseHuesped={responseHuesped} />
+                <TablaReserva responseReserva={responseReserva} />
             </div>
 
             <Toaster />

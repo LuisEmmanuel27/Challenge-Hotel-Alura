@@ -118,6 +118,13 @@ public class HuespedController {
         // return "Datos de huésped no válidos";
         // }
 
+        // // Verificar si la idReserva existe antes de actualizar el huésped
+        // Huesped huespedExistente = huespedDao.buscarHuespedPorId(id);
+        // if (huespedExistente == null) {
+        // response.status(404); // Not Found
+        // return "El huesped no existe";
+        // }
+
         // // Llama al método del DAO para actualizar el huésped con los campos
         // // proporcionados
         // huespedDao.actualizarHuesped(id, camposActualizados);
@@ -139,7 +146,7 @@ public class HuespedController {
 
         Spark.put("/huesped/actualizar/:id", (request, response) -> {
             try {
-                Integer id = Integer.parseInt(request.params(":id"));
+                Integer idFromURL = Integer.parseInt(request.params(":id"));
                 Map<String, Object> camposActualizados = new ObjectMapper().readValue(request.body(),
                         new TypeReference<Map<String, Object>>() {
                         });
@@ -150,15 +157,22 @@ public class HuespedController {
                 }
 
                 // Verificar si la idReserva existe antes de actualizar el huésped
-                Huesped huespedExistente = huespedDao.buscarHuespedPorId(id);
+                Huesped huespedExistente = huespedDao.buscarHuespedPorId(idFromURL);
                 if (huespedExistente == null) {
                     response.status(404); // Not Found
-                    return "El huesped no existe";
+                    return "El huésped no existe";
+                }
+
+                // Verificar si el id en el cuerpo de la solicitud coincide con el id en la URL
+                Integer idFromBody = (Integer) camposActualizados.get("id");
+                if (!idFromURL.equals(idFromBody)) {
+                    response.status(400);
+                    return "El ID en el cuerpo de la solicitud no coincide con el ID en la URL";
                 }
 
                 // Llama al método del DAO para actualizar el huésped con los campos
                 // proporcionados
-                huespedDao.actualizarHuesped(id, camposActualizados);
+                huespedDao.actualizarHuesped(idFromURL, camposActualizados);
 
                 response.status(200);
                 return "Huésped actualizado con éxito";

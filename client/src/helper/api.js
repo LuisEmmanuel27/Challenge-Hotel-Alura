@@ -63,28 +63,17 @@ export const obtenerReserva = async (value) => {
 }
 
 //* enviar nuevos datos de huesped */
-export const editarHuesped = async (huespedId, nuevosDatos) => {
-    try {
-        const json = JSON.stringify(nuevosDatos);
-        console.log(json, huespedId);
-        const response = await axios.put(`${URL_BASE}/huesped/actualizar/${huespedId}`, json);
-        return response.data;
-    } catch (error) {
-        console.error('Error al editar el huésped:', error);
-        throw error;
-    }
-}
+export const actualizarHuesped = (idHuesped, datosActualizados) => {
+    const json = JSON.stringify(datosActualizados);
+    console.log(json, idHuesped);
+    return axios.put(`${URL_BASE}/huesped/actualizar/${idHuesped}`, json);
+};
 
-export const editarReserva = async (reservaId, nuevosDatos) => {
-    try {
-        const json = JSON.stringify(nuevosDatos);
-        console.log(json, reservaId);
-        const response = await axios.put(`${URL_BASE}/reservaAct/${reservaId}`, json);
-        return response.data;
-    } catch (error) {
-        console.error('Error al editar reservación:', error);
-        throw error;
-    }
+//* enviar nuevos datos de reserva */
+export const actualizarReserva = async (reservaId, datosActualizados) => {
+    const json = JSON.stringify(datosActualizados);
+    console.log(json, reservaId);
+    return axios.put(`${URL_BASE}/reservaAct/${reservaId}`, json);
 }
 
 export const eliminarHuesped = async (huespedId) => {

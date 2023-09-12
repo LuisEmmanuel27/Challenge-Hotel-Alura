@@ -94,7 +94,7 @@ public class ReservaDao {
                 double valor = resultSet.getDouble("valor");
                 String formaPago = resultSet.getString("formaPago");
 
-                reserva = new Reserva(id, fechaSalida, fechaEntrada, valor, formaPago);
+                reserva = new Reserva(id, fechaEntrada, fechaSalida, valor, formaPago);
             }
         } catch (SQLException e) {
             e.printStackTrace();
