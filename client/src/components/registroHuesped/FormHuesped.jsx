@@ -42,7 +42,7 @@ const FormHuesped = () => {
             alert("Error en el formulario");
         } else {
             // Construye el objeto de datos del huésped
-            const datosHuespedNuevo = {  // Cambia el nombre de la variable a datosHuespedNuevo
+            const datosHuespedNuevo = {
                 nombre,
                 apellido,
                 fechaNacimiento: fechaNacimiento.toISOString().split('T')[0],
@@ -57,7 +57,7 @@ const FormHuesped = () => {
                 const response = await crearHuesped(datosHuespedNuevo);
 
                 if (response) {
-                    // Maneja la respuesta según tus necesidades
+                    
                     console.log('Huesped creado con éxito:', response);
 
                     toast.success('Huésped agregado', {
@@ -69,7 +69,7 @@ const FormHuesped = () => {
                         }
                     });
 
-                    // Puedes redirigir o realizar otras acciones aquí
+                   
                     setTimeout(() => {
                         navigate('/menuPrincipal');
                     }, 1000);
