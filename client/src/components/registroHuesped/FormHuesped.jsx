@@ -48,7 +48,7 @@ const FormHuesped = () => {
                 fechaNacimiento: fechaNacimiento.toISOString().split('T')[0],
                 nacionalidad: nacionalidad.label,
                 telefono,
-                idReserva: datosHuesped.idReserva, // Asegúrate de ajustar esto según cómo tengas la referencia a la reserva
+                idReserva: datosHuesped.idReserva,
             };
 
             console.log(datosHuespedNuevo);
