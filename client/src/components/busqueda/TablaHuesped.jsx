@@ -22,7 +22,7 @@ const TablaHuesped = ({ responseHuesped }) => {
     const handleSaveClick = (e) => {
         e.preventDefault();
 
-        const idHuesped = nuevaData.id; // Asegúrate de que la propiedad sea correcta
+        const idHuesped = nuevaData.id;
         const fechaFormateada = formatDate(nuevaData.fechaNacimiento);
         const datosActualizados = { ...nuevaData, fechaNacimiento: fechaFormateada };
 
@@ -46,8 +46,7 @@ const TablaHuesped = ({ responseHuesped }) => {
                     }
                 })
             });
-
-        // Luego, puedes deshabilitar la edición
+        
         setEditable(false);
     };
 
